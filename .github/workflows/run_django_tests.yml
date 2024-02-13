@@ -30,7 +30,7 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        pytest cars/tests -p "*test.py" --cov=cars --cov-report=xml
+        python carshop/manage.py test cars.tests -p "*test.py" --cov=cars --cov-report=xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
