@@ -34,7 +34,7 @@ jobs:
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4.0.1
-      env:
+      with:
         token: ${{ secrets.2c3b6611-d690-4b0e-9135-4278d5df3e3a }}
         slug: MikeMoore1337/django_carshop
 
