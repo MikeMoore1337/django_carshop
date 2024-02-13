@@ -32,7 +32,13 @@ jobs:
       run: |
         python carshop/manage.py test cars.tests -p "*test.py" --cov=cars --cov-report=xml
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2
-      with:
-        token: ${{ secrets.bc6620ff-f55d-4ad6-8963-1b94be9302e7 }}
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4.0.1
+      env:
+        token: ${{ secrets.2c3b6611-d690-4b0e-9135-4278d5df3e3a }}
+        slug: MikeMoore1337/django_carshop
+
+#    - name: Upload coverage to Codecov
+#      uses: codecov/codecov-action@v2
+#      with:
+#        token: ${{ secrets.bc6620ff-f55d-4ad6-8963-1b94be9302e7 }}
