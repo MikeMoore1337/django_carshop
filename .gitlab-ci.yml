@@ -9,6 +9,8 @@ stages:
 build_job:
   stage: build
   script:
+    - python -m venv venv
+    - ./venv/bin/pip install -r requirements.txt
     - echo "Building..."
 
 lint_job:
@@ -21,7 +23,9 @@ lint_job:
 test_job:
   stage: test
   script:
-    - python carshop/manage.py test cars.tests -p "*test.py"
+    - python -m venv venv
+    - ./venv/bin/pip install -r requirements.txt
+    - ./venv/bin/python carshop/manage.py test cars.tests -p "*test.py"
     - echo "Running tests..."
 
 deploy_job:
