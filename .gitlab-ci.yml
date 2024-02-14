@@ -21,6 +21,7 @@ lint_job:
 test_job:
   stage: test
   script:
+    - python carshop/manage.py test cars.tests -p "*test.py"
     - echo "Running tests..."
 
 deploy_job:
