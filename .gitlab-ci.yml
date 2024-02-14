@@ -1,0 +1,30 @@
+image: python:3.11
+
+stages:
+  - build
+  - lint
+  - test
+  - deploy
+
+build_job:
+  stage: build
+  script:
+    - echo "Building..."
+
+lint_job:
+  before_script:
+    - pip3 install flake8
+  script:
+    - flake8 --config .flake8
+    - echo "Lint check..."
+
+test_job:
+  stage: test
+  script:
+    - echo "Running tests..."
+
+deploy_job:
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."

@@ -9,4 +9,3 @@ exclude =
     .gitignore,
     tmp,
     .venv,
-    testing
