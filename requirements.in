@@ -4,6 +4,9 @@ django-debug-toolbar
 pillow
 sqlparse
 tzdata
+ruff
+black
+isort
 flake8
 
 

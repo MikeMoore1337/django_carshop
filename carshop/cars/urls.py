@@ -1,16 +1,8 @@
 from django.urls import path
 
-from .views import CarListView, CarDetailView
+from .views import CarDetailView, CarListView
 
 urlpatterns = [
-    path(
-        "catalog.html",
-        CarListView.as_view(),
-        name="catalog"
-    ),
-    path(
-        'car_detail/<int:pk>/',
-        CarDetailView.as_view(),
-        name='car_detail'
-    ),
+    path("catalog.html", CarListView.as_view(), name="catalog"),
+    path("car_detail/<int:pk>/", CarDetailView.as_view(), name="car_detail"),
 ]
