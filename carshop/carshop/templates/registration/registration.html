@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+            integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+            crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .registration-container {
+            text-align: center;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="registration-container">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h2>Registration</h2>
+    <div class="form-container">
+        <form method="post" action="{% url 'registration' %}">
+            {% csrf_token %}
+            <div class="mb-3 row">
+                <label for="id_name" class="col-sm-3 col-form-label">Username:</label>
+                <div class="col-sm-9">
+                    <input type="text" name="username" id="id_name" class="form-control">
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="id_email" class="col-sm-3 col-form-label">Email:</label>
+                <div class="col-sm-9">
+                    <input type="email" name="email" id="id_email" class="form-control">
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="id_password" class="col-sm-3 col-form-label">Password:</label>
+                <div class="col-sm-9">
+                    <input type="password" name="password" id="id_password" class="form-control">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+            <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>
