@@ -8,7 +8,17 @@ class RegistrationForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'password']
 
+    def save(self, commit=True):
+        user = super(RegistrationForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
+
 
 class LoginForm(AuthenticationForm):
-    email = forms.EmailField(max_length=254, widget=forms.TextInput(attrs={'placeholder': 'Email'}))
+    username = forms.CharField(max_length=254, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
+    class Meta:
+        fields = ['username', 'password']
