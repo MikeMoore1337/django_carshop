@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 
-from .views import home, registration, login, logout
+from .views import home, login, logout, registration
 
 urlpatterns = [
     path("", home, name="home"),
@@ -11,7 +11,6 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path("admin/", admin.site.urls, name="admin"),
     path("cars/", include("cars.urls")),
-
 ]
 
 if settings.DEBUG:

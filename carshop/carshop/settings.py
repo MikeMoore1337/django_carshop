@@ -57,7 +57,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-# AUTH_USER_MODEL = 'cars.CustomUser'
+LOGIN_URL = 'login'
 
 ROOT_URLCONF = "carshop.urls"
 

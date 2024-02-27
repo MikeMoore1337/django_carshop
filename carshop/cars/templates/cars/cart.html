@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+            integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+            crossorigin="anonymous"></script>
+    <title>Shopping Cart</title>
+    <style>
+    </style>
+</head>
+<body>
+    <header class="bg-dark text-white p-3">
+        <h1>Your Shopping Cart</h1>
+    </header>
+
+    <main class="container mt-4">
+        {% if cart_items %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Car</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                        <tr>
+                            <td>{{ item.car.brand }} {{ item.car.model }}</td>
+                            <td>
+                                <input type="number" class="quantity-input" value="{{ item.quantity }}" data-price="{{ item.car.price }}" data-item-id="{{ item.car.pk }}" min="1">
+                            </td>
+                            <td>{{ item.car.price }}</td>
+                            <td class="total-price" data-item-id="{{ item.car.pk }}"></td>
+                            <td>
+                                <a href="{% url 'remove_from_cart' item.car.pk %}" class="btn btn-danger btn-sm">Remove</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p>Total: <span id="cart-total"></span></p>
+        {% else %}
+            <p>Your cart is empty.</p>
+        {% endif %}
+        <a href="{% url 'catalog' %}" class="btn btn-primary mb-2">Back to Car catalog</a><br>
+        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+    </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        const cartTotalElement = document.getElementById('cart-total');
+
+        quantityInputs.forEach(function (input) {
+            const itemId = input.dataset.itemId;
+
+            // Используем Local Storage для сохранения значений Quantity и Total
+            const storedQuantity = localStorage.getItem(`quantity-${itemId}`);
+            const storedTotal = localStorage.getItem(`total-${itemId}`);
+
+            input.value = storedQuantity || input.value;
+
+            if (storedTotal) {
+                const totalElement = document.querySelector(`.total-price[data-item-id="${itemId}"]`);
+                totalElement.textContent = storedTotal;
+            }
+
+            input.addEventListener('change', function () {
+                const quantity = Math.max(parseInt(input.value), 1);
+                const price = parseFloat(input.dataset.price);
+                const total = quantity * price;
+
+                const totalElement = document.querySelector(`.total-price[data-item-id="${itemId}"]`);
+                totalElement.textContent = total.toFixed(2);
+
+                updateCartTotal();
+
+                // Сохраняем значения Quantity и Total в Local Storage
+                localStorage.setItem(`quantity-${itemId}`, quantity);
+                localStorage.setItem(`total-${itemId}`, total.toFixed(2));
+            });
+        });
+
+        function updateCartTotal() {
+            const totalElements = document.querySelectorAll('.total-price');
+            let cartTotal = 0;
+
+            totalElements.forEach(function (element) {
+                cartTotal += parseFloat(element.textContent);
+            });
+
+            cartTotalElement.textContent = cartTotal.toFixed(2);
+        }
+
+        updateCartTotal();
+    });
+</script>
+</body>
+</html>
