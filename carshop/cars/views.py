@@ -1,10 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.messages import get_messages
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
-from django.urls import reverse
 from django.views.generic import DetailView, ListView, TemplateView
 
 from .models import Car, Cart, CartItem, Order, OrderItem
@@ -52,6 +52,11 @@ class ConfirmOrderView(TemplateView):
         total_price = sum(item.car.price * item.quantity for item in cart_items)
         context['cart_items'] = cart_items
         context['total_price'] = total_price
+
+        # Удаление уведомления после использования
+        if 'order_placed' in self.request.session:
+            del self.request.session['order_placed']
+
         return context
 
 
@@ -81,10 +86,19 @@ def view_cart(request):
                 cart_items.delete()
 
             messages.success(request, "Order placed successfully. Your order will be processed.")
+
+            # Очищаем кэш уведомлений
+            request._messages = messages.constants.DEFAULT_LEVELS
+            storage = get_messages(request)
+            storage.used = True
+
             return redirect('confirm_order')
 
-    # Явный возврат для случая GET-запроса
-    return render(request, 'cars/cart.html', {'cart_items': cart_items, 'total_price': total_price, 'order_placed': False})
+    context = {'cart_items': cart_items, 'total_price': total_price, 'order_placed': False}
+    storage = get_messages(request)
+    storage.used = True
+
+    return render(request, 'cars/cart.html', context)
 
 
 def car_detail(request, car_id):

@@ -13,6 +13,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car catalog</title>
     <style>
+        nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            padding: 10px;
+        }
+
+        .nav-link {
+            margin-left: 10px;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -76,6 +87,9 @@
 </head>
 <body>
 <header class="bg-dark text-white p-3">
+        <nav>
+        <a href="{% url 'cart' %}" class="btn btn-primary nav-link">Cart</a>
+    </nav>
     <h1>Car catalog</h1>
 </header>
 

@@ -76,9 +76,11 @@
 </header>
 {% if messages %}
 {% for message in messages %}
+{% if not 'Your order has been placed successfully.' in message.tags %}
 <div class="alert alert-success">
     {{ message }}
 </div>
+{% endif %}
 {% endfor %}
 {% endif %}
 <main class="container mt-4">
