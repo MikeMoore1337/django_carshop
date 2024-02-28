@@ -14,97 +14,102 @@
     </style>
 </head>
 <body>
-    <header class="bg-dark text-white p-3">
-        <h1>Your Shopping Cart</h1>
-    </header>
+<header class="bg-dark text-white p-3">
+    <h1>Your Shopping Cart</h1>
+</header>
 
-    <main class="container mt-4">
-        {% if cart_items %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Car</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in cart_items %}
-                        <tr>
-                            <td>{{ item.car.brand }} {{ item.car.model }}</td>
-                            <td>
-                                <input type="number" class="quantity-input" value="{{ item.quantity }}" data-price="{{ item.car.price }}" data-item-id="{{ item.car.pk }}" min="1">
-                            </td>
-                            <td>{{ item.car.price }}</td>
-                            <td class="total-price" data-item-id="{{ item.car.pk }}"></td>
-                            <td>
-                                <a href="{% url 'remove_from_cart' item.car.pk %}" class="btn btn-danger btn-sm">Remove</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<main class="container mt-4">
+    {% if cart_items %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Car</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.car.brand }} {{ item.car.model }}</td>
+            <td>
+                <input type="number" class="quantity-input" value="{{ item.quantity }}" data-price="{{ item.car.price }}"
+                       data-item-id="{{ item.car.pk }}" min="1">
+            </td>
+            <td>{{ item.car.price }}</td>
+            <td class="total-price" data-item-id="{{ item.car.pk }}"></td>
+            <td>
+                <a href="{% url 'remove_from_cart' item.car.pk %}" class="btn btn-danger btn-sm">Remove</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-            <p>Total: <span id="cart-total"></span></p>
-        {% else %}
-            <p>Your cart is empty.</p>
-        {% endif %}
-        <a href="{% url 'catalog' %}" class="btn btn-primary mb-2">Back to Car catalog</a><br>
-        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
-    </main>
+    <p>Total: <span id="cart-total"></span></p>
+    <form method="post" action="{% url 'view_cart' %}">
+        {% csrf_token %}
+        <button type="submit" name="buy_button" class="btn btn-success mb-2">Buy</button>
+    </form>
+    {% else %}
+    <p>Your cart is empty.</p>
+    {% endif %}
+    <a href="{% url 'catalog' %}" class="btn btn-primary mb-2">Back to Car catalog</a><br>
+    <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+</main>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const quantityInputs = document.querySelectorAll('.quantity-input');
-    const cartTotalElement = document.getElementById('cart-total');
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantityInputs = document.querySelectorAll('.quantity-input');
+        const cartTotalElement = document.getElementById('cart-total');
 
-    quantityInputs.forEach(function (input) {
-        const itemId = input.dataset.itemId;
-        const totalElement = document.querySelector(`.total-price[data-item-id="${itemId}"]`);
-
-        function updateItemTotal() {
-            const quantity = Math.max(parseInt(input.value), 1);
-            const price = parseFloat(input.dataset.price);
-            const total = quantity * price;
-
-            totalElement.textContent = total.toFixed(2);
-            updateCartTotal();
-        }
-
-        input.addEventListener('change', updateItemTotal);
-        updateItemTotal();  // Вызывается для обновления Total при загрузке страницы
-    });
-
-    function updateCartTotal() {
-        let cartTotal = 0;
         quantityInputs.forEach(function (input) {
             const itemId = input.dataset.itemId;
             const totalElement = document.querySelector(`.total-price[data-item-id="${itemId}"]`);
-            cartTotal += parseFloat(totalElement.textContent);
+
+            function updateItemTotal() {
+                const quantity = Math.max(parseInt(input.value), 1);
+                const price = parseFloat(input.dataset.price);
+                const total = quantity * price;
+
+                totalElement.textContent = total.toFixed(2);
+                updateCartTotal();
+            }
+
+            input.addEventListener('change', updateItemTotal);
+            updateItemTotal();  // Вызывается для обновления Total при загрузке страницы
         });
-        cartTotalElement.textContent = cartTotal.toFixed(2);
-    }
-});
 
-function updateCartTotal() {
-    const totalElements = document.querySelectorAll('.total-price');
-    let cartTotal = 0;
-
-    totalElements.forEach(function (element) {
-        const itemId = element.dataset.itemId;
-
-        // Проверяем, существует ли элемент с указанным data-item-id
-        const quantityInput = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
-        if (quantityInput) {
-            // Если элемент существует, добавляем его значение к общей сумме
-            cartTotal += parseFloat(element.textContent);
+        function updateCartTotal() {
+            let cartTotal = 0;
+            quantityInputs.forEach(function (input) {
+                const itemId = input.dataset.itemId;
+                const totalElement = document.querySelector(`.total-price[data-item-id="${itemId}"]`);
+                cartTotal += parseFloat(totalElement.textContent);
+            });
+            cartTotalElement.textContent = cartTotal.toFixed(2);
         }
     });
 
-    cartTotalElement.textContent = cartTotal.toFixed(2);
-}
+    function updateCartTotal() {
+        const totalElements = document.querySelectorAll('.total-price');
+        let cartTotal = 0;
+
+        totalElements.forEach(function (element) {
+            const itemId = element.dataset.itemId;
+
+            // Проверяем, существует ли элемент с указанным data-item-id
+            const quantityInput = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
+            if (quantityInput) {
+                // Если элемент существует, добавляем его значение к общей сумме
+                cartTotal += parseFloat(element.textContent);
+            }
+        });
+
+        cartTotalElement.textContent = cartTotal.toFixed(2);
+    }
 </script>
 </body>
 </html>

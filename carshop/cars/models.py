@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User as DjangoUser
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -12,14 +12,8 @@ class Car(models.Model):
         return f"{self.brand} {self.model} ({self.year}) - {self.price:.2f}"
 
 
-class User(models.Model):
-    username = models.CharField(max_length=255)
-    email = models.EmailField()
-    password = models.CharField(max_length=255)
-
-
 class Cart(models.Model):
-    user = models.OneToOneField(DjangoUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     items = models.ManyToManyField('Car', through='CartItem')
 
     objects = models.Manager()
@@ -35,16 +29,17 @@ class CartItem(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    items = models.ManyToManyField('Car', through='OrderItem')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
 
 class OrderItem(models.Model):
-    car = models.ForeignKey('Car', on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey('Order', on_delete=models.CASCADE)
+    car = models.ForeignKey('Car', on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
 
     objects = models.Manager()

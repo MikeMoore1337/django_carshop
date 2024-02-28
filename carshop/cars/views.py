@@ -41,9 +41,36 @@ def add_to_cart(request, car_id):
 
 @login_required
 def view_cart(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    user = request.user
+
+    # Получить или создать корзину для пользователя
+    cart, created = Cart.objects.get_or_create(user=user)
     cart_items = CartItem.objects.filter(cart=cart)
     total_price = sum(item.car.price * item.quantity for item in cart_items)
+
+    # Попытка получить существующий заказ или создать новый
+    try:
+        order = Order.objects.get(user=user)
+    except Order.DoesNotExist:
+        order = None
+
+    if request.method == 'POST' and 'buy_button' in request.POST:
+        if order is None:
+            # Если заказ не существует, создаем новый
+            order = Order.objects.create(total_price=total_price, user=user)
+        else:
+            # Если заказ существует, обновляем его
+            order.total_price = total_price
+            order.save()
+
+        # Добавление элементов заказа
+        for cart_item in cart_items:
+            OrderItem.objects.create(order=order, car=cart_item.car, quantity=cart_item.quantity)
+
+        # Очистка корзины после успешного заказа
+        cart_items.delete()
+        messages.success(request, "Order placed successfully.")
+
     return render(request, 'cars/cart.html', {'cart_items': cart_items, 'total_price': total_price})
 
 
