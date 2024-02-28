@@ -24,13 +24,17 @@ def add_to_cart(request, car_id):
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_item, created = CartItem.objects.get_or_create(car=car, cart=cart)
 
-    cart_item.quantity += 1
-    cart_item.save()
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+    else:
+        cart_item.quantity = 1
+        cart_item.save()
 
     messages.success(request, f"{car.brand} {car.model} added to your cart.")
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'success': True})
+        return JsonResponse({'success': True, 'quantity': cart_item.quantity})
 
     return redirect('view_cart')
 

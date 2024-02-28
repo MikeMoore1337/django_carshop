@@ -122,27 +122,49 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         const quantityInputs = document.querySelectorAll('.quantity-input');
+        const cartTotalElement = document.getElementById('cart-total');
+
+        const cartData = {};
+
         quantityInputs.forEach(function (input) {
             const itemId = input.dataset.itemId;
-            const storedQuantity = localStorage.getItem(`quantity-${itemId}`);
 
-            console.log(`Loaded quantity for item ${itemId}: ${storedQuantity}`);
-
-            // Если есть сохраненное значение Quantity, устанавливаем его
-            if (storedQuantity !== null) {
-                input.value = storedQuantity;
-                console.log(`Set quantity for item ${itemId} to ${storedQuantity}`);
-            }
+            // Используем объект cartData для хранения значений Quantity и Total
+            cartData[itemId] = {
+                quantity: parseInt(input.value),
+                total: parseFloat(document.querySelector(`.total-price[data-item-id="${itemId}"]`).textContent)
+            };
 
             input.addEventListener('change', function () {
                 const quantity = Math.max(parseInt(input.value), 1);
-                const itemId = input.dataset.itemId;
+                const price = parseFloat(input.dataset.price);
+                const total = quantity * price;
 
-                console.log(`Changed quantity for item ${itemId} to ${quantity}`);
+                const totalElement = document.querySelector(`.total-price[data-item-id="${itemId}"]`);
+                totalElement.textContent = total.toFixed(2);
 
-                localStorage.setItem(`quantity-${itemId}`, quantity);
+                updateCartTotal();
+
+                // Обновляем значения Quantity и Total в объекте cartData
+                cartData[itemId] = {
+                    quantity: quantity,
+                    total: total
+                };
             });
         });
+
+        function updateCartTotal() {
+            let cartTotal = 0;
+
+            // Используем Object.keys для получения ключей из объекта cartData
+            Object.keys(cartData).forEach(function (itemId) {
+                cartTotal += cartData[itemId].total;
+            });
+
+            cartTotalElement.textContent = cartTotal.toFixed(2);
+        }
+
+        updateCartTotal();
     });
 </script>
 </body>
