@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+            integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <title>Confirm Order</title>
+    <style>
+        #order-success-message {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<header class="bg-dark text-white p-3">
+    <h1>Your Order Confirmation</h1>
+</header>
+
+<main class="container mt-4">
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if cart_items %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Car</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.car.brand }} {{ item.car.model }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.car.price }}</td>
+            <td>{{ item.total_price }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <p>Total: {{ total_price }}</p>
+
+    {% if order_placed %}
+    <div id="order-success-message" class="alert alert-success" role="alert">
+        Your order has been placed successfully. Thank you for shopping with us!
+    </div>
+    {% else %}
+    <p>Your order has not been placed yet.</p>
+    {% endif %}
+
+    {% else %}
+    <p>Your cart is empty.</p>
+    {% endif %}
+
+    <a href="{% url 'catalog' %}" class="btn btn-primary mb-2">Back to Car catalog</a><br>
+    <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+</main>
+
+<script>
+    const quantityInputs = document.querySelectorAll('.quantity-input');
+    const cartTotalElement = document.getElementById('cart-total');
+
+    quantityInputs.forEach(function (input) {
+        const itemId = input.dataset.itemId;
+        const totalElement = document.querySelector(`.total-price[data-item-id="${itemId}"]`);
+
+        function updateItemTotal() {
+            const quantity = Math.max(parseInt(input.value), 1);
+            const price = parseFloat(input.dataset.price);
+            const total = quantity * price;
+
+            totalElement.textContent = total.toFixed(2);
+            updateCartTotal();
+        }
+
+        input.addEventListener('change', updateItemTotal);
+        updateItemTotal();  // Вызывается для обновления Total при загрузке страницы
+    });
+
+    function updateCartTotal() {
+        let cartTotal = 0;
+        quantityInputs.forEach(function (input) {
+            const itemId = input.dataset.itemId;
+            const totalElement = document.querySelector(`.total-price[data-item-id="${itemId}"]`);
+            cartTotal += parseFloat(totalElement.textContent);
+        });
+        cartTotalElement.textContent = cartTotal.toFixed(2);
+    }
+</script>
+</body>
+</html>

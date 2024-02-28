@@ -1,8 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import DetailView, ListView
+from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import render
+from django.urls import reverse
+from django.views.generic import DetailView, ListView, TemplateView
 
 from .models import Car, Cart, CartItem, Order, OrderItem
 
@@ -39,39 +42,49 @@ def add_to_cart(request, car_id):
     return redirect('view_cart')
 
 
+class ConfirmOrderView(TemplateView):
+    template_name = "cars/confirm_order.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        cart_items = CartItem.objects.filter(cart__user=user)
+        total_price = sum(item.car.price * item.quantity for item in cart_items)
+        context['cart_items'] = cart_items
+        context['total_price'] = total_price
+        return context
+
+
 @login_required
 def view_cart(request):
     user = request.user
-
-    # Получить или создать корзину для пользователя
     cart, created = Cart.objects.get_or_create(user=user)
     cart_items = CartItem.objects.filter(cart=cart)
     total_price = sum(item.car.price * item.quantity for item in cart_items)
 
-    # Попытка получить существующий заказ или создать новый
-    try:
-        order = Order.objects.get(user=user)
-    except Order.DoesNotExist:
-        order = None
-
     if request.method == 'POST' and 'buy_button' in request.POST:
-        if order is None:
-            # Если заказ не существует, создаем новый
-            order = Order.objects.create(total_price=total_price, user=user)
-        else:
-            # Если заказ существует, обновляем его
-            order.total_price = total_price
-            order.save()
+        if not cart_items.exists():
+            messages.error(request, "Your cart is empty. Add items to your cart before proceeding.")
+            return redirect('view_cart')
 
-        # Добавление элементов заказа
-        for cart_item in cart_items:
-            OrderItem.objects.create(order=order, car=cart_item.car, quantity=cart_item.quantity)
+        try:
+            latest_order = Order.objects.filter(user=user).latest('created_at')
+        except Order.DoesNotExist:
+            latest_order = None
 
-        # Очистка корзины после успешного заказа
-        cart_items.delete()
-        messages.success(request, "Order placed successfully.")
+        if latest_order is None:
+            with transaction.atomic():
+                latest_order = Order.objects.create(total_price=total_price, user=user)
+                for cart_item in cart_items:
+                    OrderItem.objects.create(order=latest_order, car=cart_item.car, quantity=cart_item.quantity)
 
-    return render(request, 'cars/cart.html', {'cart_items': cart_items, 'total_price': total_price})
+                cart_items.delete()
+
+            messages.success(request, "Order placed successfully. Your order will be processed.")
+            return redirect('confirm_order')
+
+    # Явный возврат для случая GET-запроса
+    return render(request, 'cars/cart.html', {'cart_items': cart_items, 'total_price': total_price, 'order_placed': False})
 
 
 def car_detail(request, car_id):
@@ -85,3 +98,8 @@ def remove_from_cart(request, car_id):
     cart_item.delete()
     messages.success(request, "Car removed from your cart.")
     return redirect('view_cart')
+
+
+@login_required
+def confirm_order(request):
+    return render(request, 'cars/confirm_order.html')
