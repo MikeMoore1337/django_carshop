@@ -45,6 +45,10 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Apply migrations
+        run: |
+          python carshop/manage.py migrate
+
       - name: Run Tests
         run: |
           python carshop/manage.py test cars.tests -p "*tests.py"
