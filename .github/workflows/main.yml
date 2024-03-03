@@ -47,6 +47,7 @@ jobs:
 
       - name: Apply migrations
         run: |
+          python carshop/manage.py makemigrations
           python carshop/manage.py migrate
 
       - name: Run Tests
