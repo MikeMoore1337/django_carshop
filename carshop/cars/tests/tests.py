@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
-from sqlalchemy.sql.coercions import cls
 
 from ..models import Car, Cart, CartItem, Order
 
@@ -65,13 +64,13 @@ class OrderModelTest(TestCase):
         super(OrderModelTest, cls).tearDownClass()
 
     def test_order_creation(self):
-        order = Order.objects.create(user=self.user, total_price=cls.cart_item.car.price * cls.cart_item.quantity)
+        order = Order.objects.create(user=self.user, total_price=self.cart_item.car.price * self.cart_item.quantity)
         self.assertEqual(order.user, self.user)
-        self.assertEqual(order.total_price, cls.cart_item.car.price * cls.cart_item.quantity)
+        self.assertEqual(order.total_price, self.cart_item.car.price * self.cart_item.quantity)
 
     def test_add_items_to_order(self):
         order = Order.objects.create(user=self.user, total_price=0)
-        order.add_items_to_order(cart_items=[cls.cart_item])
+        order.add_items_to_order(cart_items=[self.cart_item])
         self.assertEqual(order.orderitem_set.count(), 1)
-        self.assertEqual(order.orderitem_set.first().car, cls.cart_item.car)
-        self.assertEqual(order.orderitem_set.first().quantity, cls.cart_item.quantity)
+        self.assertEqual(order.orderitem_set.first().car, self.cart_item.car)
+        self.assertEqual(order.orderitem_set.first().quantity, self.cart_item.quantity)
