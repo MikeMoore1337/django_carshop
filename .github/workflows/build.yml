@@ -45,7 +45,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          python carshop/manage.py test cars.tests -p "*test.py"
+          python carshop/manage.py test cars.tests -p "*tests.py"
 
   lint:
     runs-on: ubuntu-latest
