@@ -1,4 +1,4 @@
-name: Building, Linting, Testing and Deployment
+name: Linting, Testing, Building and Deployment
 
 on:
   push:
@@ -9,30 +9,9 @@ on:
     branches:
       - '*'
 
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.11
-
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Build
-        run: |
-          echo "Building is not implemented in this workflow."
-
   lint:
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -75,9 +54,29 @@ jobs:
         run: |
           python carshop/manage.py test cars.tests -p "*tests.py"
 
-  deploy:
+  build:
     runs-on: ubuntu-latest
     needs: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Build
+        run: |
+          echo "Building is not implemented in this workflow."
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
