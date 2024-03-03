@@ -13,13 +13,12 @@ line-length = 120
 indent-width = 4
 
 fix = true
-fixable = ["ALL"]
-unfixable = []
+lint.fixable = ["ALL"]
+lint.unfixable = []
 
-[lint]
-select = ["E4", "E501", "E7", "E9", "F", "I"]
-ignore = []
-exclude = [
+lint.select = ["E4", "E501", "E7", "E9", "F", "I"]
+lint.ignore = []
+lint.exclude = [
     ".git",
     "__pycache__",
     "venv",

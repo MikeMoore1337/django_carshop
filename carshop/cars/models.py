@@ -14,14 +14,14 @@ class Car(models.Model):
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    items = models.ManyToManyField('Car', through='CartItem')
+    items = models.ManyToManyField("Car", through="CartItem")
 
     objects = models.Manager()
 
 
 class CartItem(models.Model):
-    car = models.ForeignKey('Car', on_delete=models.CASCADE)
-    cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
+    car = models.ForeignKey("Car", on_delete=models.CASCADE)
+    cart = models.ForeignKey("Cart", on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     objects = models.Manager()
@@ -40,8 +40,8 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey('Order', on_delete=models.CASCADE)
-    car = models.ForeignKey('Car', on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey("Order", on_delete=models.CASCADE)
+    car = models.ForeignKey("Car", on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
 
     objects = models.Manager()
