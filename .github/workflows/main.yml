@@ -1,52 +1,15 @@
-name: Testing, Linting, Building, and Deployment
+name: Linting, Testing, Building and Deployment
 
 on:
   push:
     branches:
-      - main
+      - '*'
+
   pull_request:
     branches:
-      - main
+      - '*'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.11
-
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Build
-        run: |
-          echo "Building is not implemented in this workflow."
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.11
-
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Run Tests
-        run: |
-          python carshop/manage.py test cars.tests -p "*test.py"
-
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -66,9 +29,54 @@ jobs:
         run: |
           flake8 --config .flake8
 
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Apply migrations
+        run: |
+          python carshop/manage.py makemigrations
+          python carshop/manage.py migrate
+
+      - name: Run Tests
+        run: |
+          python carshop/manage.py test cars.tests -p "*tests.py"
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Build
+        run: |
+          echo "Building is not implemented in this workflow."
+
   deploy:
     runs-on: ubuntu-latest
-    needs: [ test, lint, build ]
+    needs: build
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2

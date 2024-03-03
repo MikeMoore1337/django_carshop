@@ -17,6 +17,7 @@
             display: none;
         }
     </style>
+    <title>Confirm Order</title>
 </head>
 <body>
 <header class="bg-dark text-white p-3">
@@ -57,13 +58,11 @@
 
     <p>Total: {{ total_price }}</p>
 
-    {% if order_placed %}
-    <div id="order-success-message" class="alert alert-success" role="alert">
-        Your order has been placed successfully. Thank you for shopping with us!
-    </div>
-    {% else %}
-    <p>Your order has not been placed yet.</p>
-    {% endif %}
+    <form method="post" action="{% url 'payment_page' %}">
+        {% csrf_token %}
+        <input type="hidden" name="order_id" value="{{ latest_order.id }}">
+        <button type="submit" class="btn btn-success">Proceed to Payment</button>
+    </form>
 
     {% else %}
     <p>Your cart is empty.</p>

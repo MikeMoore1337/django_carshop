@@ -6,9 +6,9 @@ from .views import home, login, logout, registration
 
 urlpatterns = [
     path("", home, name="home"),
-    path('registration/', registration, name='registration'),
-    path('login/', login, name='login'),
-    path('logout/', logout, name='logout'),
+    path("registration/", registration, name="registration"),
+    path("login/", login, name="login"),
+    path("logout/", logout, name="logout"),
     path("admin/", admin.site.urls, name="admin"),
     path("cars/", include("cars.urls")),
 ]

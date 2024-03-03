@@ -57,7 +57,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-LOGIN_URL = 'login'
+LOGIN_URL = "login"
 
 ROOT_URLCONF = "carshop.urls"
 
@@ -78,7 +78,7 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 WSGI_APPLICATION = "carshop.wsgi.application"
