@@ -34,12 +34,12 @@
             margin-bottom: 0;
         }
 
-        .go-to-cart {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-        }
+        /*.go-to-cart {*/
+        /*    position: absolute;*/
+        /*    right: 0;*/
+        /*    top: 50%;*/
+        /*    transform: translateY(-50%);*/
+        /*}*/
 
         main {
             max-width: 800px;
@@ -49,21 +49,21 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .back-btn {
-            display: inline-block;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
+        /*.back-btn {*/
+        /*    display: inline-block;*/
+        /*    padding: 10px;*/
+        /*    background-color: #007BFF;*/
+        /*    color: white;*/
+        /*    text-decoration: none;*/
+        /*    border: none;*/
+        /*    cursor: pointer;*/
+        /*    border-radius: 4px;*/
+        /*    margin-top: 10px;*/
+        /*}*/
 
-        .back-btn:hover {
-            background-color: #0056b3;
-        }
+        /*.back-btn:hover {*/
+        /*    background-color: #0056b3;*/
+        /*}*/
 
         p {
             margin-bottom: 10px;
@@ -129,7 +129,7 @@
         quantityInputs.forEach(function (input) {
             const itemId = input.dataset.itemId;
 
-            // Используем объект cartData для хранения значений Quantity и Total
+            // Для хранения значений Quantity и Total
             cartData[itemId] = {
                 quantity: parseInt(input.value),
                 total: parseFloat(document.querySelector(`.total-price[data-item-id="${itemId}"]`).textContent)
@@ -145,7 +145,7 @@
 
                 updateCartTotal();
 
-                // Обновляем значения Quantity и Total в объекте cartData
+                // Для обновления значений Quantity и Total в объекте cartData
                 cartData[itemId] = {
                     quantity: quantity,
                     total: total
@@ -156,7 +156,7 @@
         function updateCartTotal() {
             let cartTotal = 0;
 
-            // Используем Object.keys для получения ключей из объекта cartData
+            // Для получения ключей из объекта cartData
             Object.keys(cartData).forEach(function (itemId) {
                 cartTotal += cartData[itemId].total;
             });

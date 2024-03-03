@@ -92,24 +92,6 @@
             cartTotalElement.textContent = cartTotal.toFixed(2);
         }
     });
-
-    function updateCartTotal() {
-        const totalElements = document.querySelectorAll('.total-price');
-        let cartTotal = 0;
-
-        totalElements.forEach(function (element) {
-            const itemId = element.dataset.itemId;
-
-            // Проверяем, существует ли элемент с указанным data-item-id
-            const quantityInput = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
-            if (quantityInput) {
-                // Если элемент существует, добавляем его значение к общей сумме
-                cartTotal += parseFloat(element.textContent);
-            }
-        });
-
-        cartTotalElement.textContent = cartTotal.toFixed(2);
-    }
 </script>
 </body>
 </html>
