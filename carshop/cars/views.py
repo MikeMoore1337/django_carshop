@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.messages import constants as messages_constants
 from django.contrib.messages import get_messages
 from django.db import transaction
 from django.http import JsonResponse
@@ -7,7 +8,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView, TemplateView
 
-from .models import Car, Cart, CartItem, Order, OrderItem
+from .models import Car, Cart, CartItem, Order
 
 
 class CarListView(ListView):
@@ -22,6 +23,7 @@ class CarDetailView(DetailView):
     context_object_name = "car"
 
 
+@login_required
 def add_to_cart(request, car_id):
     car = get_object_or_404(Car, pk=car_id)
     cart, created = Cart.objects.get_or_create(user=request.user)
@@ -80,17 +82,13 @@ def view_cart(request):
         if latest_order is None:
             with transaction.atomic():
                 latest_order = Order.objects.create(total_price=total_price, user=user)
-                for cart_item in cart_items:
-                    OrderItem.objects.create(order=latest_order, car=cart_item.car, quantity=cart_item.quantity)
-
+                latest_order.add_items_to_order(cart_items)
                 cart_items.delete()
 
             messages.success(request, "Order placed successfully. Your order will be processed.")
 
-            # Очищаем кэш уведомлений
-            request._messages = messages.constants.DEFAULT_LEVELS
-            storage = get_messages(request)
-            storage.used = True
+            messages.set_level(request, messages_constants.SUCCESS)
+            messages.success(request, "Order placed successfully. Your order will be processed.")
 
             return redirect('confirm_order')
 

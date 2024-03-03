@@ -34,8 +34,9 @@ class Order(models.Model):
 
     objects = models.Manager()
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    def add_items_to_order(self, cart_items):
+        for cart_item in cart_items:
+            OrderItem.objects.create(order=self, car=cart_item.car, quantity=cart_item.quantity)
 
 
 class OrderItem(models.Model):
