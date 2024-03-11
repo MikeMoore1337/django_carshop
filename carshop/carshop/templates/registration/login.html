@@ -1,72 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
-          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
-            integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
-            crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
+{% extends 'home.html' %}
 
-        .login-container {
-            text-align: center;
-        }
+{% block title %}Login - Django Car Shop{% endblock %}
 
-        .form-container {
-            max-width: 400px;
-            margin: auto;
-        }
-    </style>
-</head>
-<body>
-<div class="login-container">
+{% block header %}Login{% endblock %}
 
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-danger">
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
+{% block content %}
+    <div class="login-container">
 
-    <h2>Login</h2>
-    <div class="form-container">
-        <form method="post" action="{% url 'login' %}">
-            {% csrf_token %}
-            <div class="mb-3 row">
-                <label for="id_username" class="col-sm-3 col-form-label">Username:</label>
-                <div class="col-sm-9">
-                    {{ form.username }}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
                 </div>
-            </div>
+            {% endfor %}
+        {% endif %}
 
-            <div class="mb-3 row">
-                <label for="id_password" class="col-sm-3 col-form-label">Password:</label>
-                <div class="col-sm-9">
-                    {{ form.password }}
+        <div class="form-container">
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="mb-3 row">
+                    <label for="id_username" class="col-sm-3 col-form-label">Username:</label>
+                    <div class="col-sm-9">
+                        {{ form.username }}
+                    </div>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-            <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
-        </form>
+
+                <div class="mb-3 row">
+                    <label for="id_password" class="col-sm-3 col-form-label">Password:</label>
+                    <div class="col-sm-9">
+                        {{ form.password }}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+            </form>
+        </div>
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}!</p>
+            <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+        {% endif %}
     </div>
-    {% if user.is_authenticated %}
-    <p>Welcome, {{ user.username }}!</p>
-    <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
-    {% endif %}
-</div>
-</body>
-</html>
+{% endblock %}
