@@ -10,6 +10,10 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('cars', '0001_initial_car'),
+        ('cars', '0001_initial_cart'),
+        ('cars', '0001_initial_cartitem'),
+        ('cars', '0001_initial_order'),
     ]
 
     operations = [
