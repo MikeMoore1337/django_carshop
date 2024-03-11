@@ -1,89 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
-          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
-            integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
-            crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ car.brand }} {{ car.model }} Details</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
+{% extends 'home.html' %}
 
-        header {
-            background-color: #333;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            position: relative;
-        }
+{% block title %}{{ car.brand }} {{ car.model }} Details - Django Car Shop{% endblock %}
 
-        h1 {
-            color: #FFFFFF;
-            position: relative;
-            margin-bottom: 0;
-        }
+{% block header %}{{ car.brand }} {{ car.model }} Details{% endblock %}
 
-        /*.go-to-cart {*/
-        /*    position: absolute;*/
-        /*    right: 0;*/
-        /*    top: 50%;*/
-        /*    transform: translateY(-50%);*/
-        /*}*/
-
-        main {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        /*.back-btn {*/
-        /*    display: inline-block;*/
-        /*    padding: 10px;*/
-        /*    background-color: #007BFF;*/
-        /*    color: white;*/
-        /*    text-decoration: none;*/
-        /*    border: none;*/
-        /*    cursor: pointer;*/
-        /*    border-radius: 4px;*/
-        /*    margin-top: 10px;*/
-        /*}*/
-
-        /*.back-btn:hover {*/
-        /*    background-color: #0056b3;*/
-        /*}*/
-
-        p {
-            margin-bottom: 10px;
-        }
-
-        a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <header class="bg-dark text-white p-3">
-        <h1>{{ car.brand }} {{ car.model }} Details</h1>
-    </header>
-
+{% block content %}
     <main class="container mt-4">
         <p>Year: {{ car.year }}</p>
         <p>Price: {{ car.price }}</p>
@@ -111,7 +32,8 @@
             Car successfully added to your cart!
         </div>
     {% endif %}
-
+{% endblock %}
+{% block script %}
 <script>
     document.getElementById('addToCartForm').addEventListener('submit', function (event) {
         if ({% if added_to_cart %}true{% else %}false{% endif %}) {
@@ -167,5 +89,4 @@
         updateCartTotal();
     });
 </script>
-</body>
-</html>
+{% endblock %}

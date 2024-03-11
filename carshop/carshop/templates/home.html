@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
-          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+          crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
@@ -11,7 +12,7 @@
             crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Django Car Shop</title>
+    <title>{% block title %}Django Car Shop{% endblock %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -72,8 +73,9 @@
         <a href="{% url 'cart' %}" class="btn btn-primary nav-link">Cart</a>
         <a href="{% url 'admin:index' %}" class="btn btn-primary nav-link">Admin Dashboard</a>
     </nav>
-    <h1>Welcome to Django Car Shop</h1>
+    <h1>{% block header %}Welcome to Django Car Shop{% endblock %}</h1>
 </header>
+{% block messages %}
 {% if messages %}
 {% for message in messages %}
 {% if not 'Your order has been placed successfully.' in message.tags %}
@@ -83,8 +85,12 @@
 {% endif %}
 {% endfor %}
 {% endif %}
+{% endblock %}
 <main class="container mt-4">
-    <p>This is the home page content. You can go to the <a href="{% url 'catalog' %}">Cars catalog</a>.</p>
+    {% block content %}This is the home page content. You can go to the <a href="{% url 'catalog' %}">Cars catalog</a>.{% endblock %}
 </main>
+{% block script %}
+
+{% endblock %}
 </body>
 </html>

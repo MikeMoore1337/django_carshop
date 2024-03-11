@@ -10,7 +10,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path("catalog.html", CarListView.as_view(), name="catalog"),
+    path("catalog", CarListView.as_view(), name="catalog"),
     path("car_detail/<int:pk>/", CarDetailView.as_view(), name="car_detail"),
     path("add_to_cart/<int:car_id>/", add_to_cart, name="add_to_cart"),
     path("cart/", view_cart, name="view_cart"),

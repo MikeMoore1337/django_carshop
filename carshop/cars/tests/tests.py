@@ -64,7 +64,10 @@ class OrderModelTest(TestCase):
         super(OrderModelTest, cls).tearDownClass()
 
     def test_order_creation(self):
-        order = Order.objects.create(user=self.user, total_price=self.cart_item.car.price * self.cart_item.quantity)
+        order = Order.objects.create(
+            user=self.user,
+            total_price=self.cart_item.car.price * self.cart_item.quantity,
+        )
         self.assertEqual(order.user, self.user)
         self.assertEqual(order.total_price, self.cart_item.car.price * self.cart_item.quantity)
 

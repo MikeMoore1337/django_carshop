@@ -64,8 +64,8 @@ ROOT_URLCONF = "carshop.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "carshop/templates"],
-        "APP_DIRS": True,
+        "DIRS": [BASE_DIR / "carshop/templates"],  # если закомментировать, то будет ошибка
+        "APP_DIRS": True,  # если изменить на False, а DIRS оставить как есть, то будет ошибка, даже чере os.path
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
