@@ -5,46 +5,48 @@
 {% block header %}Registration{% endblock %}
 
 {% block content %}
-<div class="registration-container">
+<div class="container">
+    <div class="registration-container">
 
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-success">
-        {{ message }}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="form-container">
+            <form method="post" action="{% url 'registration' %}">
+                {% csrf_token %}
+                <div class="mb-3 row">
+                    <label for="id_name" class="col-sm-3 col-form-label">Username:</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="username" id="id_name" class="form-control">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="id_email" class="col-sm-3 col-form-label">Email:</label>
+                    <div class="col-sm-9">
+                        <input type="email" name="email" id="id_email" class="form-control">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="id_password" class="col-sm-3 col-form-label">Password:</label>
+                    <div class="col-sm-9">
+                        <input type="password" name="password" id="id_password" class="form-control">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+                <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+            </form>
+        </div>
     </div>
-    {% endfor %}
-    {% endif %}
-
-    <div class="form-container">
-        <form method="post" action="{% url 'registration' %}">
-            {% csrf_token %}
-            <div class="mb-3 row">
-                <label for="id_name" class="col-sm-3 col-form-label">Username:</label>
-                <div class="col-sm-9">
-                    <input type="text" name="username" id="id_name" class="form-control">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label for="id_email" class="col-sm-3 col-form-label">Email:</label>
-                <div class="col-sm-9">
-                    <input type="email" name="email" id="id_email" class="form-control">
-                </div>
-            </div>
-
-            <div class="mb-3 row">
-                <label for="id_password" class="col-sm-3 col-form-label">Password:</label>
-                <div class="col-sm-9">
-                    <input type="password" name="password" id="id_password" class="form-control">
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-            <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
-        </form>
-    </div>
-</div>
-{% block script %}
+    {% block script %}
     <script>
         // Тут можно добавить скрипты, если потребуется
     </script>
-{% endblock %}
+    {% endblock %}
+    {% endblock %}
